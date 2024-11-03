@@ -25,4 +25,5 @@ public class Event {
     private String ip;
     @Column(name = "period")
     private LocalDateTime time;
+    //
 }
