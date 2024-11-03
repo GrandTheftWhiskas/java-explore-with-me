@@ -11,6 +11,14 @@
 	</parent>
 
 	<name>Explore With Me</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+
+	</dependencies>
 
 	<groupId>ru.practicum</groupId>
 	<artifactId>explore-with-me</artifactId>
@@ -21,6 +29,11 @@
 		<java.version>21</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<modules>
+        <module>service-statistic</module>
+		<module>main-service</module>
+	</modules>
 
 	<build>
 		<pluginManagement>
