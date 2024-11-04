@@ -32,7 +32,7 @@
 
 	<modules>
         <module>stats-server</module>
-		<module>main-service</module>
+		<module>ewm-service</module>
 	</modules>
 
 	<build>
