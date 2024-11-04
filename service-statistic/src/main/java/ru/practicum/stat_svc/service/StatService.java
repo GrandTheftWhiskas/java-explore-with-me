@@ -6,14 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.ValidationException;
 import ru.practicum.stat_svc.dto.EventDto;
-import ru.practicum.stat_svc.mapper.StatMapper;
 import ru.practicum.stat_svc.model.Event;
 import ru.practicum.stat_svc.repository.StatRepository;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 

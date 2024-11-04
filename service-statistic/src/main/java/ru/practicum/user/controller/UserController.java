@@ -2,13 +2,11 @@ package ru.practicum.user.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.stat_svc.controller.StatsController;
-import ru.practicum.stat_svc.model.Event;
 import ru.practicum.user.Create;
 import ru.practicum.user.Update;
 import ru.practicum.user.client.UserClient;
