@@ -9,10 +9,10 @@
     </parent>
 
 
-    <name>stats-dto</name>
+
 
     <artifactId>stats-dto</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+
 
     <dependencies>
         <dependency>

@@ -12,12 +12,12 @@
     <name>stats-service</name>
 
     <artifactId>stats-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>stats-server</module>
         <module>stats-client</module>
+        <module>stats-dto</module>
     </modules>
 
     <dependencies>
