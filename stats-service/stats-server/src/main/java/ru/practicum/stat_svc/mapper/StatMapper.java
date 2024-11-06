@@ -1,6 +1,6 @@
 package ru.practicum.stat_svc.mapper;
 
-import ru.practicum.StatsDto;
+import ru.practicum.dto.StatsDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.stat_svc.model.Stats;
 

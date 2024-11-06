@@ -1,6 +1,6 @@
 package ru.practicum.stat_svc.mapper;
 
-import ru.practicum.EventDto;
+import ru.practicum.dto.EventDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.stat_svc.model.Event;
 

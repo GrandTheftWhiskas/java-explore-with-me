@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.EventDto;
-import ru.practicum.StatsDto;
+import ru.practicum.dto.StatsDto;
+import ru.practicum.dto.EventDto;
 import ru.practicum.stat_svc.service.StatService;
 
 import java.time.LocalDateTime;

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.EventDto;
+import ru.practicum.dto.EventDto;
 import ru.practicum.stat_svc.controller.StatsController;
 import ru.practicum.user.Create;
 import ru.practicum.user.Update;
