@@ -26,4 +26,13 @@ services:
       - POSTGRES_PASSWORD=stats
       - POSTGRES_DB=stats
 
-  
+  ewm-service:
+    build: ./main-service
+    image: ewm-service
+    container_name: ewm-service
+    ports:
+    - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_USERNAME=ewm
+      - SPRING_DATASOURCE_PASSWORD=ewm
+
