@@ -35,7 +35,7 @@ services:
     environment:
       - SPRING_DATASOURCE_USERNAME=ewm
       - SPRING_DATASOURCE_PASSWORD=ewm
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/users
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:7070/users
       - SHAREIT_SERVER_URL=http://stat-server:9090
       - TZ=Europe/Moscow
 
@@ -45,7 +45,7 @@ services:
       image: postgres:16.1
       container_name: postgres-ewm-main-db
       ports:
-        - "6541:5432"
+        - "7070:7070"
       environment:
         - POSTGRES_USER=ewm
         - POSTGRES_PASSWORD=ewm
