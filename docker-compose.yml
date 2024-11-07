@@ -31,7 +31,7 @@ services:
     image: main-server
     container_name: main-server
     depends_on:
-      - ewm-service
+      - ewm-db
     environment:
       - SPRING_DATASOURCE_USERNAME=ewm
       - SPRING_DATASOURCE_PASSWORD=ewm
