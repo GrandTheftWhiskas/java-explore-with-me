@@ -4,14 +4,13 @@ services:
       image: stats-server
       container_name: stats-server
       ports:
-        - "8080:8080"
+        - "9090:9090"
       depends_on:
         - ewm-service
       environment:
         - SPRING_DATASOURCE_USERNAME=stats
         - SPRING_DATASOURCE_PASSWORD=stats
         - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
-        - SHAREIT_SERVER_URL=http://server:9090
         - TZ=Europe/Moscow
 
   stats-db:
@@ -37,6 +36,7 @@ services:
     environment:
       - SPRING_DATASOURCE_USERNAME=ewm
       - SPRING_DATASOURCE_PASSWORD=ewm
+      - SHAREIT_SERVER_URL=http://stats-server:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewm
 
   ewm-db:
