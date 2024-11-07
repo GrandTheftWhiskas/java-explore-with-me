@@ -8,8 +8,6 @@ services:
       depends_on:
         - ewm-service
       environment:
-        - SPRING_DATASOURCE_USERNAME=stats
-        - SPRING_DATASOURCE_PASSWORD=stats
         - SHAREIT_SERVER_URL=http://ewm-service:8080
         - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
         - TZ=Europe/Moscow
@@ -35,8 +33,7 @@ services:
     ports:
     - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_USERNAME=ewm
-      - SPRING_DATASOURCE_PASSWORD=ewm
+      - SHAREIT_SERVER_URL=http://ewm-service:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewm
 
   ewm-db:
