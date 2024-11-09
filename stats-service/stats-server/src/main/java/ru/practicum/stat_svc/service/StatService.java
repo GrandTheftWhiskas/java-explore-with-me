@@ -38,18 +38,17 @@ public class StatService {
         return EventMapper.toEventDto(statRepository.getEventById(id));
     }
 
-    public StatsDto getAll(String app, String uri, LocalDateTime start, LocalDateTime end) {
+    public StatsDto getAll(LocalDateTime start, LocalDateTime end, String uri, Boolean unique) {
         log.info("Получение статистики");
         if (start.isAfter(end)) {
             throw new ValidationException("Конец не может быть перед стартом");
         }
 
-        List<Event> events = statRepository.getEvents(app, uri, start, end);
+        List<Event> events = statRepository.getEvents(null, null, null, null);
         StatsDto eventDto = new StatsDto();
-        eventDto.setApp(app);
+        eventDto.setApp(null);
         eventDto.setUri(uri);
         eventDto.setHits(events.size());
-        return eventDto;
+        return null;
     }
-
 }

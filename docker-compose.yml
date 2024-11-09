@@ -8,10 +8,6 @@ services:
     depends_on:
       stats-db:
         condition: service_healthy
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/basa
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=12345
 
   stats-db:
     image: postgres:16.1

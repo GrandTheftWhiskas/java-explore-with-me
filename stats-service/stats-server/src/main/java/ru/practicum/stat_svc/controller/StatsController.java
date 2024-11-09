@@ -30,8 +30,8 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public StatsDto getAll(@RequestParam String app, @RequestParam String uri,
-                               @RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-        return statService.getAll(app, uri, start, end);
+    public StatsDto getAll(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end,
+                           @RequestParam String uri, Boolean unique) {
+        return statService.getAll(start, end, uri, unique);
     }
 }
