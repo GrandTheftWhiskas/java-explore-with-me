@@ -9,7 +9,7 @@ services:
       stats-db:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:7070/statsDb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/basa
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=12345
 
@@ -17,11 +17,11 @@ services:
     image: postgres:16.1
     container_name: stats-db
     ports:
-      - "7070:7070"
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=statsDb
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=basa
+      - POSTGRES_USER=dbdb
+      - POSTGRES_PASSWORD=54321
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
