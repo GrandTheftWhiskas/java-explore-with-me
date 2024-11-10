@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.EventDto;
 import ru.practicum.StatsDto;
-import ru.practicum.exception.ValidationException;
 import ru.practicum.stat_svc.mapper.EventMapper;
 import ru.practicum.stat_svc.model.Event;
 import ru.practicum.stat_svc.repository.StatRepository;
-
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,31 +24,35 @@ public class StatService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public EventDto post(EventDto eventDto) {
-        log.info("Добавление события");
+        System.out.println(eventDto);
         Event event = new Event();
         event.setApp(eventDto.getApp());
         event.setUri(eventDto.getUri());
         event.setIp(eventDto.getIp());
-        event.setTime(LocalDateTime.now());
+        event.setPeriod(LocalDateTime.now());
+        System.out.println(event);
         return EventMapper.toEventDto(statRepository.save(event));
     }
 
     public EventDto get(Long id) {
-        log.info("Получение события");
         return EventMapper.toEventDto(statRepository.getEventById(id));
     }
 
-    public StatsDto getAll(LocalDateTime start, LocalDateTime end, String uri, Boolean unique) {
-        log.info("Получение статистики");
-        if (start.isAfter(end)) {
-            throw new ValidationException("Конец не может быть перед стартом");
-        }
+    public List<StatsDto> getAll(String start, String end, List<String> uris, Boolean unique) {
+        LocalDateTime convertStart =
+                LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
+        LocalDateTime convertEnd =
+                LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
 
-        List<Event> events = statRepository.getEvents(null, null, null, null);
-        StatsDto eventDto = new StatsDto();
-        eventDto.setApp(null);
-        eventDto.setUri(uri);
-        eventDto.setHits(events.size());
-        return null;
+        if (unique) {
+            if (uris == null || uris.isEmpty()) {
+                return statRepository.getAllUnique(convertStart, convertEnd);
+            }
+            return statRepository.getAllUniqueWithUris(convertStart, convertEnd, uris);
+        }
+        if (uris == null || uris.isEmpty()) {
+            return statRepository.getAll(convertStart, convertEnd);
+        }
+        return statRepository.getAllWithUris(convertStart, convertEnd, uris);
     }
 }

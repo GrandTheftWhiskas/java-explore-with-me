@@ -1,27 +1,29 @@
 package ru.practicum.stat_svc.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsDto;
 import ru.practicum.EventDto;
 import ru.practicum.stat_svc.service.StatService;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
-@RequestMapping
 @RequiredArgsConstructor
 @Slf4j
 public class StatsController {
     @Autowired
     private final StatService statService;
+    private static final String DATE = "yyyy-MM-dd HH:mm:ss";
 
     @PostMapping("/hit")
-    public EventDto post(@RequestBody EventDto event) {
-        return statService.post(event);
+    public EventDto post(@Valid @RequestBody EventDto eventDto) {
+        return statService.post(eventDto);
     }
 
     @GetMapping("/stats/{id}")
@@ -30,8 +32,10 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public StatsDto getAll(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end,
-                           @RequestParam String uri, Boolean unique) {
-        return statService.getAll(start, end, uri, unique);
+    public List<StatsDto> getAll(@RequestParam @DateTimeFormat(pattern = DATE) String start,
+                           @RequestParam @DateTimeFormat(pattern = DATE) String end,
+                           @RequestParam(required = false) List<String> uris,
+                           @RequestParam(required = false) boolean unique) {
+        return statService.getAll(start, end, uris, unique);
     }
 }

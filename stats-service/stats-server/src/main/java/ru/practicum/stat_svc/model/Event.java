@@ -22,7 +22,7 @@ public class Event {
     private String uri;
     @Column(name = "ip")
     private String ip;
-    @Column(name = "timestamp")
-    private LocalDateTime time;
+    @Column(name = "period")
+    private LocalDateTime period;
 
 }
