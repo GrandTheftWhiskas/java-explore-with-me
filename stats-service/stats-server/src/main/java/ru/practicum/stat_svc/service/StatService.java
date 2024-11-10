@@ -24,13 +24,11 @@ public class StatService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public EventDto post(EventDto eventDto) {
-        System.out.println(eventDto);
         Event event = new Event();
         event.setApp(eventDto.getApp());
         event.setUri(eventDto.getUri());
         event.setIp(eventDto.getIp());
         event.setPeriod(LocalDateTime.now());
-        System.out.println(event);
         return EventMapper.toEventDto(statRepository.save(event));
     }
 
