@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StatClient extends BaseClient {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public StatClient(RestTemplateBuilder builder, String serverUrl) {
         super(builder

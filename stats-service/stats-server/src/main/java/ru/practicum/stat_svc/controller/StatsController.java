@@ -23,11 +23,13 @@ public class StatsController {
 
     @PostMapping("/hit")
     public EventDto post(@Valid @RequestBody EventDto eventDto) {
+        log.info("Добавление события");
         return statService.post(eventDto);
     }
 
     @GetMapping("/stats/{id}")
     public EventDto get(@PathVariable long id) {
+        log.info("Получение события");
         return statService.get(id);
     }
 
@@ -36,6 +38,7 @@ public class StatsController {
                            @RequestParam @DateTimeFormat(pattern = DATE) String end,
                            @RequestParam(required = false) List<String> uris,
                            @RequestParam(required = false) boolean unique) {
+        log.info("Получение статистики");
         return statService.getAll(start, end, uris, unique);
     }
 }
