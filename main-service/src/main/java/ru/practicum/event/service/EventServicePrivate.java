@@ -96,10 +96,8 @@ public class EventServicePrivate {
     public EventRespShort getFull(Long userId, Long eventId, String path) {
         try {
         Event event = eventRepository.getEventById(eventId);
-        System.out.println(event);
         Long requestConfirm  = requestRepository.countByEventIdAndStatus(eventId, "PUBLISHED");
         EventRespShort eventRespShort = EventMapper.toRespShort(event);
-        System.out.println(eventRespShort);
         eventRespShort.setConfirmedRequests(requestConfirm);
         ResponseEntity<List<StatsDto>> response =
                 statClient.getStat(LocalDateTime.parse("1000-12-12 12:12:12", formatter),
@@ -111,7 +109,6 @@ public class EventServicePrivate {
             return eventRespShort;
         }
         eventRespShort.setViews(views.getFirst());
-            System.out.println(eventRespShort);
         return eventRespShort;
         } catch (NullPointerException e) {
             throw new NotFoundException("Сущность не найдена");
@@ -134,7 +131,6 @@ public class EventServicePrivate {
                 } else if (requestFor.getStatus().equals("REJECTED")) {
                     request1.setStatus("REJECTED");
                 }
-                System.out.println(request1.getStatus());
                 requestRepository.save(request1);
             }
                 if (requestFor.getStatus().equals("REJECTED")) {

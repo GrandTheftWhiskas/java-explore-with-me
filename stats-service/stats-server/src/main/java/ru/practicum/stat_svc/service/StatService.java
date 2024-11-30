@@ -24,7 +24,6 @@ public class StatService {
 
     public EventDto post(EventDto eventDto) {
         try {
-            System.out.println("сервис");
             Event event = new Event();
             event.setApp(eventDto.getApp());
             event.setUri(eventDto.getUri());

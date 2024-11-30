@@ -15,7 +15,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserDto add(UserDto userDto) {
-        System.out.println(userDto);
         User user = new User(userDto.getId(), userDto.getName(), userDto.getEmail());
         return UserMapper.toUserDto(userRepository.save(user));
     }

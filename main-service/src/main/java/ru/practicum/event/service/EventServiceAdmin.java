@@ -43,8 +43,6 @@ public class EventServiceAdmin {
 
 
     public EventRespShort update(EventUpdate eventUpdate, Long id) {
-        System.out.println("Обнова");
-        System.out.println(eventUpdate);
         try {
         Event event = eventRepository.getEventById(id);
         if (event.getState().equals("PUBLISHED") || event.getState().equals("CANCELED")) {
@@ -107,7 +105,6 @@ public class EventServiceAdmin {
                     eventRespFulls = eventRepository.findAll(size).stream()
                             .map((event -> EventMapper.toRespShort(event))).toList();
                 }
-            System.out.println(eventRespFulls);
             List<Long> eventsIds = eventRespFulls
                     .stream()
                     .map(EventRespShort::getId)
@@ -117,7 +114,6 @@ public class EventServiceAdmin {
                     .countByEventIdInAndStatusGroupByEvent(eventsIds, "PUBLISHED")
                     .stream()
                     .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
-            System.out.println(requestsConfirm);
             String uris = eventsIds.stream().map((id) -> "/event/" + id).collect(Collectors.joining());
             ResponseEntity<List<StatsDto>> response =
                     statClient.getStat(LocalDateTime.parse("1000-12-12 12:12:12", formatter),

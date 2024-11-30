@@ -38,7 +38,6 @@ public class EventControllerAdmin {
                                    @RequestParam(defaultValue = "10") int size) {
     log.info("Админ-поиск");
     List<EventRespShort> events = service.get(users, states, categories, rangeStart, rangeEnd, from, size);
-    System.out.println(events);
     return events;
     }
 }

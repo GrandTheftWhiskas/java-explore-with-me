@@ -20,15 +20,12 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public CategoryDto add(CategoryDto categoryDto) {
-        System.out.println(categoryDto);
         Category category = new Category(categoryDto.getId(), categoryDto.getName());
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
 
     public CategoryDto update(CategoryDto categoryDto, Long catId) {
-        System.out.println(categoryDto);
-        System.out.println(catId);
         List<Category> categories = categoryRepository.findAll().stream()
                 .filter(category1 -> category1.getName().equals(categoryDto.getName())).toList();
         if (!categories.isEmpty()) {
