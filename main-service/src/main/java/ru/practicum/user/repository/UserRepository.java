@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User getUserById(Long id);
 
-    @Query(value = "SELECT * FROM users AS u" +
+    @Query(value = "SELECT * FROM users AS u " +
     "WHERE u.id IN (?1) " +
     "LIMIT ?2 ", nativeQuery = true)
     List<User> findByIdIn(List<Integer> ids, int size);
