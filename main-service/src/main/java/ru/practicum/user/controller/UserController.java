@@ -28,8 +28,8 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> get(@RequestParam(required = false) List<Integer> ids,
-                             @RequestParam(defaultValue = "0") int from,
-                             @RequestParam(defaultValue = "10") int size) {
+                             @RequestParam(required = false, defaultValue = "0") int from,
+                             @RequestParam(required = false, defaultValue = "10") int size) {
         log.info("Получение пользователей");
         return userService.get(ids, from, size);
     }

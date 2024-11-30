@@ -32,10 +32,10 @@ public class EventControllerPublic {
                                        @RequestParam(required = false) Boolean paid,
                                        @RequestParam(required = false) String rangeStart,
                                        @RequestParam(required = false) String rangeEnd,
-                                       @RequestParam(defaultValue = "false") boolean onlyAvailable,
+                                       @RequestParam(required = false, defaultValue = "false") boolean onlyAvailable,
                                        @RequestParam(required = false) String sort,
-                                       @RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(required = false, defaultValue = "0") int from,
+                                       @RequestParam(required = false, defaultValue = "10") int size,
                                        HttpServletRequest servletRequest) {
         log.info("Поиск события");
         String ip = servletRequest.getRemoteAddr();

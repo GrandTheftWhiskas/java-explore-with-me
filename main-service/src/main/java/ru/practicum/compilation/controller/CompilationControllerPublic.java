@@ -19,8 +19,8 @@ public class CompilationControllerPublic {
 
     @GetMapping
     public List<CompilationResponse> get(@RequestParam(required = false) boolean pinned,
-                                            @RequestParam(defaultValue = "0") int from,
-                                            @RequestParam(defaultValue = "10") int size) {
+                                            @RequestParam(required = false, defaultValue = "0") int from,
+                                            @RequestParam(required = false, defaultValue = "10") int size) {
         log.info("Получение подборок");
         return service.getAll(pinned, from, size);
     }

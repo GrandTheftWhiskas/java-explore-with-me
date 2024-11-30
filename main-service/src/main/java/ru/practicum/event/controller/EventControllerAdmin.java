@@ -34,8 +34,8 @@ public class EventControllerAdmin {
                                            pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
                                    @RequestParam(required = false) @DateTimeFormat(
                                            pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-                                   @RequestParam(defaultValue = "0") int from,
-                                   @RequestParam(defaultValue = "10") int size) {
+                                   @RequestParam(required = false, defaultValue = "0") int from,
+                                   @RequestParam(required = false, defaultValue = "10") int size) {
     log.info("Админ-поиск");
     List<EventRespShort> events = service.get(users, states, categories, rangeStart, rangeEnd, from, size);
     System.out.println(events);
