@@ -25,7 +25,6 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ServiceCompilationPublic {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
