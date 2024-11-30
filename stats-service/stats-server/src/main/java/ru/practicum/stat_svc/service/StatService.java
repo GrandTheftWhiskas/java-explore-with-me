@@ -23,17 +23,12 @@ public class StatService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public EventDto post(EventDto eventDto) {
-        try {
-            System.out.println("сервис");
             Event event = new Event();
             event.setApp(eventDto.getApp());
             event.setUri(eventDto.getUri());
             event.setIp(eventDto.getIp());
             event.setTimestamp(LocalDateTime.parse(eventDto.getTimestamp(), formatter));
             return EventMapper.toEventDto(statRepository.save(event));
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Значения не должны равняться null");
-        }
     }
 
     public EventDto get(Long id) {

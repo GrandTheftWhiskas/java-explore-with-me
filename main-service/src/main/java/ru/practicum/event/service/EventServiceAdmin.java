@@ -11,7 +11,6 @@ import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.event.dto.EventRespShort;
 import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.NotFoundException;
 import ru.practicum.request.dto.EventIdByRequestsCount;
 import ru.practicum.client.StatClient;
 import ru.practicum.event.dto.EventUpdate;
@@ -43,9 +42,6 @@ public class EventServiceAdmin {
 
 
     public EventRespShort update(EventUpdate eventUpdate, Long id) {
-        System.out.println("Обнова");
-        System.out.println(eventUpdate);
-        try {
         Event event = eventRepository.getEventById(id);
         if (event.getState().equals("PUBLISHED") || event.getState().equals("CANCELED")) {
             throw new ValidationException("Текущий статус не подходит");
@@ -70,14 +66,10 @@ public class EventServiceAdmin {
         EventRespShort result = EventMapper.toRespShort(newEvent);
         result.setConfirmedRequests(requests);
         return result;
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Объект не найден");
-        }
     }
 
     public List<EventRespShort> get(List<Long> users, List<String> states, List<Integer> categories,
                                    LocalDateTime start, LocalDateTime end, int from, int size) {
-        try {
             if (users == null) {
                 users = List.of();
             } else if (states == null) {
@@ -107,7 +99,6 @@ public class EventServiceAdmin {
                     eventRespFulls = eventRepository.findAll(size).stream()
                             .map((event -> EventMapper.toRespShort(event))).toList();
                 }
-            System.out.println(eventRespFulls);
             List<Long> eventsIds = eventRespFulls
                     .stream()
                     .map(EventRespShort::getId)
@@ -117,7 +108,6 @@ public class EventServiceAdmin {
                     .countByEventIdInAndStatusGroupByEvent(eventsIds, "PUBLISHED")
                     .stream()
                     .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
-            System.out.println(requestsConfirm);
             String uris = eventsIds.stream().map((id) -> "/event/" + id).collect(Collectors.joining());
             ResponseEntity<List<StatsDto>> response =
                     statClient.getStat(LocalDateTime.parse("1000-12-12 12:12:12", formatter),
@@ -141,8 +131,5 @@ public class EventServiceAdmin {
                 }
             }
             return eventRespFulls;
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Объект не найден");
-        }
     }
 }

@@ -28,7 +28,6 @@ public class ServiceCompilationAdmin {
 
     @Transactional
     public CompilationResponse add(CompilationDto dto) {
-        System.out.println(dto);
         if (dto.getPinned() == null) {
             dto.setPinned(false);
         }
@@ -53,7 +52,6 @@ public class ServiceCompilationAdmin {
 
         Compilation compilation = compilationRepository.findCompilationById(id);
         Compilation newCompilation = new Compilation(dto.getId(), dto.getTitle(), dto.getPinned());
-        System.out.println(newCompilation);
         if (newCompilation.getTitle() != null) {
             if (newCompilation.getTitle().length() > 50) {
                 throw new BadRequestException("Длина текста не должна превышать 50");

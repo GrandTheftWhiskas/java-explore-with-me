@@ -16,7 +16,6 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.repository.LocationRepository;
 import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
 import ru.practicum.request.dto.EventIdByRequestsCount;
 import ru.practicum.request.dto.RequestDto;
@@ -63,7 +62,6 @@ public class EventServicePrivate {
     }
 
     public List<EventRespShort> get(Long userId, int from, int size) {
-        try {
             List<EventRespShort> events = eventRepository.findByInitId(userId, size).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
             List<Long> ids = events.stream().map(eventRespShort -> eventRespShort.getId()).toList();
@@ -88,18 +86,12 @@ public class EventServicePrivate {
             }
 
             return events;
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Сущность не найдена");
-        }
     }
 
     public EventRespShort getFull(Long userId, Long eventId, String path) {
-        try {
         Event event = eventRepository.getEventById(eventId);
-        System.out.println(event);
         Long requestConfirm  = requestRepository.countByEventIdAndStatus(eventId, "PUBLISHED");
         EventRespShort eventRespShort = EventMapper.toRespShort(event);
-        System.out.println(eventRespShort);
         eventRespShort.setConfirmedRequests(requestConfirm);
         ResponseEntity<List<StatsDto>> response =
                 statClient.getStat(LocalDateTime.parse("1000-12-12 12:12:12", formatter),
@@ -111,11 +103,7 @@ public class EventServicePrivate {
             return eventRespShort;
         }
         eventRespShort.setViews(views.getFirst());
-            System.out.println(eventRespShort);
         return eventRespShort;
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Сущность не найдена");
-        }
     }
 
     public Map<String, List<RequestDto>> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
@@ -134,7 +122,7 @@ public class EventServicePrivate {
                 } else if (requestFor.getStatus().equals("REJECTED")) {
                     request1.setStatus("REJECTED");
                 }
-                System.out.println(request1.getStatus());
+
                 requestRepository.save(request1);
             }
                 if (requestFor.getStatus().equals("REJECTED")) {
@@ -168,12 +156,8 @@ public class EventServicePrivate {
     }
 
     public List<RequestDto> get(Long userId, Long eventId) {
-        try {
             return requestRepository.findByEventId(eventId).stream()
                     .map(request -> RequestMapper.toRequestDto(request)).toList();
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Сущность не найдена");
-        }
     }
 
     public List<Request> doStatus(List<Request> requests, String status) {

@@ -41,9 +41,7 @@ public class EventControllerPublic {
         String ip = servletRequest.getRemoteAddr();
         String path = servletRequest.getRequestURI();
         EventDto eventDto = new EventDto("ewm-main-service", path, ip, LocalDateTime.now().format(formatter));
-        log.info("Промежуток 0");
         statClient.addStat(eventDto);
-        log.info("Промежуток 1");
         if (rangeStart == null && rangeEnd == null) {
             return service.search(text, categories, paid, null, null, onlyAvailable, sort, from, size);
         }
@@ -52,7 +50,6 @@ public class EventControllerPublic {
         String newEnd = URLDecoder.decode(rangeEnd, StandardCharsets.UTF_8);
         LocalDateTime start = LocalDateTime.parse(newStart, formatter);
         LocalDateTime end = LocalDateTime.parse(newEnd, formatter);
-        log.info("Переход");
         return service.search(text, categories, paid, start, end, onlyAvailable, sort, from, size);
     }
 

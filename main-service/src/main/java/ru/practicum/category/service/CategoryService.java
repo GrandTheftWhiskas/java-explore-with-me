@@ -8,7 +8,6 @@ import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.exception.ConflictException;
-import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
 
 import java.util.List;
@@ -20,15 +19,12 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public CategoryDto add(CategoryDto categoryDto) {
-        System.out.println(categoryDto);
         Category category = new Category(categoryDto.getId(), categoryDto.getName());
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
 
     public CategoryDto update(CategoryDto categoryDto, Long catId) {
-        System.out.println(categoryDto);
-        System.out.println(catId);
         List<Category> categories = categoryRepository.findAll().stream()
                 .filter(category1 -> category1.getName().equals(categoryDto.getName())).toList();
         if (!categories.isEmpty()) {
@@ -43,12 +39,8 @@ public class CategoryService {
     }
 
     public CategoryDto get(Long catId) {
-        try {
             Category category = categoryRepository.findCategoryById(catId);
             return CategoryMapper.toCategoryDto(category);
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Категория не найдена");
-        }
     }
 
     public List<CategoryDto> getAll(int from, int size) {
