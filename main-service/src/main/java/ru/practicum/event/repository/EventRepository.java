@@ -1,5 +1,6 @@
 package ru.practicum.event.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,13 +29,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 "AND (e.category IN (?2) OR ?2 IS NULL) " +
                 "AND (e.init IN (?3) OR ?3 IS NULL) " +
                 "AND (e.event_date BETWEEN ?4 AND ?5)) ", nativeQuery = true)
-        List<Event> findByConditionals(List<String> state, List<Long> category, List<Long> initiator,
+        Page<Event> findByConditionals(List<String> state, List<Long> category, List<Long> initiator,
                                        LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 
         @Query(value = "SELECT e.* " +
                 "FROM events AS e " +
                 "WHERE e.category IN (?1) ", nativeQuery = true)
-        List<Event> findAll(List<Integer> categories, Pageable pageable);
+        Page<Event> findAll(List<Integer> categories, Pageable pageable);
 
         @Query(value = "SELECT * " +
                 "FROM events AS e " +

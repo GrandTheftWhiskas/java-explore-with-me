@@ -61,7 +61,7 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}/requests")
-    public RequestResponse approve(@RequestBody RequestForConfirmation request,
+    public List<RequestDto> approve(@RequestBody RequestForConfirmation request,
                                    @PathVariable Long userId, @PathVariable Long eventId) {
         log.info("Обновление запроса по событию");
         return service.approve(request, userId, eventId);

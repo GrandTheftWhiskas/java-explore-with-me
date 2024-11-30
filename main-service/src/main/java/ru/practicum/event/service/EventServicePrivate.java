@@ -123,7 +123,7 @@ public class EventServicePrivate {
         }
     }
 
-    public RequestResponse approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
+    public List<RequestDto> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
         try {
 
             Event event = eventRepository.getEventById(eventId);
@@ -145,17 +145,7 @@ public class EventServicePrivate {
                 requestRepository.save(request1);
             }
 
-            RequestResponse response = new RequestResponse();
-            List<RequestDto> requestsDto = requests.stream()
-                    .map(request -> RequestMapper.toRequestDto(request)).toList();
-                if (requestFor.getStatus().equals("REJECTED")) {
-                    response.setConfirmed(List.of());
-                    response.setRejected(requestsDto);
-                } else {
-                    response.setConfirmed(requestsDto);
-                    response.setRejected(List.of());
-                }
-                return response;
+                return requests.stream().map(request -> RequestMapper.toRequestDto(request)).toList();
         } catch (NullPointerException e) {
             throw new NotFoundException("Сущность не найдена");
         }
