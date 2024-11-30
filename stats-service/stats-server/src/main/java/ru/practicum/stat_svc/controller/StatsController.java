@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsDto;
 import ru.practicum.EventDto;
@@ -22,6 +23,7 @@ public class StatsController {
     private static final String DATE = "yyyy-MM-dd HH:mm:ss";
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public EventDto post(@Valid @RequestBody EventDto eventDto) {
         log.info("Добавление события");
         return statService.post(eventDto);
@@ -34,8 +36,8 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<StatsDto> getAll(@RequestParam @DateTimeFormat(pattern = DATE) String start,
-                           @RequestParam @DateTimeFormat(pattern = DATE) String end,
+    public List<StatsDto> getAll(@RequestParam(required = false) @DateTimeFormat(pattern = DATE) String start,
+                           @RequestParam(required = false) @DateTimeFormat(pattern = DATE) String end,
                            @RequestParam(required = false) List<String> uris,
                            @RequestParam(required = false) boolean unique) {
         log.info("Получение статистики");

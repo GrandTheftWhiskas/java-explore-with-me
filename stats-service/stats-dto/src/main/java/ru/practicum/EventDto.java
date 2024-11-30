@@ -2,11 +2,12 @@ package ru.practicum;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class EventDto {
     @NotBlank
@@ -15,6 +16,7 @@ public class EventDto {
     private String uri;
     @NotBlank
     private String ip;
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
+    private String timestamp;
 }

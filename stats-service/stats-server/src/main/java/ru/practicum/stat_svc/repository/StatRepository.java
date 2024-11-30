@@ -16,7 +16,7 @@ public interface StatRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT new ru.practicum.StatsDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
             "FROM Event AS e " +
-            "WHERE e.period BETWEEN ?1 AND ?2 " +
+            "WHERE e.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC ")
     List<StatsDto> getAll(LocalDateTime start, LocalDateTime end);
@@ -24,14 +24,14 @@ public interface StatRepository extends JpaRepository<Event, Long> {
     @Query("SELECT new ru.practicum.StatsDto(e.app, e.uri, COUNT(e.ip)) " +
             "FROM Event AS e " +
             "WHERE e.uri IN ?3 " +
-            "AND e.period BETWEEN ?1 AND ?2 " +
+            "AND e.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC ")
     List<StatsDto> getAllWithUris(LocalDateTime start, LocalDateTime end, Iterable<String> uris);
 
     @Query("SELECT new ru.practicum.StatsDto(e.app, e.uri, COUNT(e.ip)) " +
             "FROM Event AS e " +
-            "WHERE e.period BETWEEN ?1 AND ?2 " +
+            "WHERE e.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC ")
     List<StatsDto> getAllUnique(LocalDateTime start, LocalDateTime end);
@@ -39,7 +39,7 @@ public interface StatRepository extends JpaRepository<Event, Long> {
     @Query("SELECT new ru.practicum.StatsDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
             "FROM Event AS e " +
             "WHERE e.uri IN ?3 " +
-            "AND e.period BETWEEN ?1 AND ?2 " +
+            "AND e.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC ")
     List<StatsDto> getAllUniqueWithUris(LocalDateTime start, LocalDateTime end, Iterable<String> uris);
