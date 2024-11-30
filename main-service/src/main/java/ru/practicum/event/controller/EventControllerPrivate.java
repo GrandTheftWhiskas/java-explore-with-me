@@ -13,7 +13,6 @@ import ru.practicum.event.dto.EventUpdate;
 import ru.practicum.event.service.EventServicePrivate;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestForConfirmation;
-import ru.practicum.request.dto.RequestResponse;
 
 import java.util.List;
 

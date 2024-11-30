@@ -23,7 +23,6 @@ import ru.practicum.exception.ValidationException;
 import ru.practicum.request.dto.EventIdByRequestsCount;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestForConfirmation;
-import ru.practicum.request.dto.RequestResponse;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.repository.RequestRepository;
