@@ -33,8 +33,8 @@ public class EventControllerPrivate {
 
     @GetMapping
     public List<EventRespShort> getUserEvents(@PathVariable Long userId,
-                                              @RequestParam(required = false, defaultValue = "0") int from,
-                                              @RequestParam(required = false, defaultValue = "10") int size) {
+                                              @RequestParam(defaultValue = "0") int from,
+                                              @RequestParam(defaultValue = "10") int size) {
         log.info("Получение событий пользователя");
         return service.get(userId, from, size);
     }

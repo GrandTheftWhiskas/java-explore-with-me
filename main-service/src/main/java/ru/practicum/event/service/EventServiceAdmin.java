@@ -2,6 +2,8 @@ package ru.practicum.event.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatsDto;
@@ -78,11 +80,13 @@ public class EventServiceAdmin {
         try {
             if (users == null) {
                 users = List.of();
-            } else if (states == null) {
+            } else if (size == 0) {
+                size = 10;
+            }else if (states == null) {
                 states = List.of();
             } else if (categories == null) {
                 categories = List.of();
-            } else if (start == null && end == null) {
+            } else if (start == null) {
                 start = LocalDateTime.parse("1000-12-12 12:12:12", formatter);
             } else if (end == null) {
                 end = LocalDateTime.parse("3000-12-12 12:12:12", formatter);
@@ -90,6 +94,7 @@ public class EventServiceAdmin {
                 throw new ValidationException("Указана неверная дата");
             }
 
+            Pageable pageable = PageRequest.of(from, size);
             List<EventRespShort> eventRespFulls;
                 if (start != null && end != null) {
                     eventRespFulls = eventRepository
@@ -97,8 +102,11 @@ public class EventServiceAdmin {
                             .stream()
                             .map(event -> EventMapper.toRespShort(event))
                             .toList();
+                } else if (categories != null) {
+                    eventRespFulls = eventRepository.findAllByCategories(categories, pageable).stream()
+                            .map((event -> EventMapper.toRespShort(event))).toList();
                 } else {
-                    eventRespFulls = eventRepository.findAll(categories, size).stream()
+                    eventRespFulls = eventRepository.findAll(size).stream()
                             .map((event -> EventMapper.toRespShort(event))).toList();
                 }
             System.out.println(eventRespFulls);

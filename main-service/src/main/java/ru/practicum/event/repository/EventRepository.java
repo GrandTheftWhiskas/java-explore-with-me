@@ -30,16 +30,18 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 "WHERE ((e.state IN (?1) OR ?1 IS NULL) " +
                 "AND (e.category IN (?2) OR ?2 IS NULL) " +
                 "AND (e.init IN (?3) OR ?3 IS NULL) " +
-                "AND (e.event_date BETWEEN ?4 AND ?5)) " +
-                "LIMIT ?6 ", nativeQuery = true)
+                "AND (e.event_date BETWEEN ?4 AND ?5)) ", nativeQuery = true)
         List<Event> findByConditionals(List<String> state, List<Integer> category, List<Long> initiator,
                                        LocalDateTime rangeStart, LocalDateTime rangeEnd, int size);
 
         @Query(value = "SELECT e.* " +
                 "FROM events AS e " +
-                "WHERE e.category IN (?1) " +
-                "LIMIT ?2 ", nativeQuery = true)
-        List<Event> findAll(List<Integer> categories, int size);
+                "WHERE e.category IN (?1) ", nativeQuery = true)
+        List<Event> findAllByCategories(List<Integer> categories, Pageable pageable);
+
+        @Query(value = "SELECT * FROM events " +
+        "LIMIT ?1 ", nativeQuery = true)
+        List<Event> findAll(int size);
 
         @Query(value = "SELECT * " +
                 "FROM events AS e " +

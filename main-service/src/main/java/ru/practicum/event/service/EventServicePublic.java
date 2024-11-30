@@ -39,8 +39,6 @@ public class EventServicePublic {
                     throw new BadRequestException("Неверная дата");
                 }
             }
-            int startPage = from > 0 ? (from / size) : 0;
-            Pageable pageable = PageRequest.of(startPage, size);
 
             if (text == null) {
                 text = "";
@@ -51,13 +49,15 @@ public class EventServicePublic {
             } else if (end == null) {
                 end = LocalDateTime.parse("3000-12-12 12:12:12", formatter);
             }
+
+            Pageable pageable = PageRequest.of(from, size);
             List<EventRespShort> events;
                 if (start != null && end != null) {
                     events = eventRepository.searchEvents(text, categories, paid,
                                     start, end, available, size).stream()
                             .map(event -> EventMapper.toRespShort(event)).toList();
                 } else {
-                    events = eventRepository.findAll(categories, size).stream()
+                    events = eventRepository.findAllByCategories(categories, pageable).stream()
                             .map(event -> EventMapper.toRespShort(event)).toList();
                 }
                 System.out.println(events);
