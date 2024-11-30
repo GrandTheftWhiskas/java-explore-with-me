@@ -80,9 +80,7 @@ public class EventServiceAdmin {
         try {
             if (users == null) {
                 users = List.of();
-            } else if (size == 0) {
-                size = 10;
-            }else if (states == null) {
+            } else if (states == null) {
                 states = List.of();
             } else if (categories == null) {
                 categories = List.of();
