@@ -1,8 +1,6 @@
 package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatsDto;
@@ -66,9 +64,7 @@ public class EventServicePrivate {
 
     public List<EventRespShort> get(Long userId, int from, int size) {
         try {
-            int startPage = from > 0 ? (from / size) : 0;
-            Pageable pageable = PageRequest.of(from, size);
-            List<EventRespShort> events = eventRepository.findByInitId(userId, pageable).stream()
+            List<EventRespShort> events = eventRepository.findByInitId(userId, size).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
             List<Long> ids = events.stream().map(eventRespShort -> eventRespShort.getId()).toList();
             Map<Integer, Integer> requestsConfirm =

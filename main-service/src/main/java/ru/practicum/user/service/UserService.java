@@ -30,7 +30,7 @@ public class UserService {
         }
 
         ids = ids.stream().sorted().toList();
-        return userRepository.findByIdIn(ids, pageable).stream()
+        return userRepository.findByIdIn(ids, size).stream()
                 .map(user -> UserMapper.toUserDto(user)).toList();
     }
 

@@ -1,8 +1,6 @@
 package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.compilation.dto.CompilationResponse;
 import ru.practicum.compilation.dto.EventByCompId;
@@ -34,8 +32,7 @@ public class ServiceCompilationPublic {
             throw new ValidationException("Введены некорректные значения");
         }
 
-        Pageable pageable = PageRequest.of(from, size);
-        List<Compilation> compilations = compilationRepository.findAll(pageable).stream().toList();
+        List<Compilation> compilations = compilationRepository.findAll(size).stream().toList();
         List<EventByCompId> eventByCompIds = repository.findEventsByCompIdIn(compilations.stream()
                 .map(compilation -> compilation.getId()).toList());
         Map<Long, List<EventRespShort>> eventShortListByCompId = new HashMap<>();

@@ -1,7 +1,5 @@
 package ru.practicum.user.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.user.model.User;
@@ -13,12 +11,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User getUserById(Long id);
 
-    Page<User> findByIdIn(List<Integer> ids, Pageable pageable);
+    @Query(value = "SELECT * FROM users AS u" +
+    "WHERE u.id IN (?1) " +
+    "LIMIT ?2 ", nativeQuery = true)
+    List<User> findByIdIn(List<Integer> ids, int size);
 
     @Query("SELECT u FROM User AS u ")
     List<User> getAllUser();
 
-    Page<User> findAll(Pageable pageable);
+    @Query(value = "SELECT * FROM users " +
+    "LIMIT ?1 ", nativeQuery = true)
+    List<User> findAll(int size);
 
     void deleteById(Long id);
 

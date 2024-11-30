@@ -54,10 +54,10 @@ public class EventServicePublic {
             List<EventRespShort> events;
                 if (start != null && end != null) {
                     events = eventRepository.searchEvents(text, categories, paid,
-                                    start, end, available, pageable).stream()
+                                    start, end, available, size).stream()
                             .map(event -> EventMapper.toRespShort(event)).toList();
                 } else {
-                    events = eventRepository.findAll(categories, pageable).stream()
+                    events = eventRepository.findAll(categories, size).stream()
                             .map(event -> EventMapper.toRespShort(event)).toList();
                 }
                 System.out.println(events);

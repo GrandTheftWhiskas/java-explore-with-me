@@ -2,8 +2,6 @@ package ru.practicum.event.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatsDto;
@@ -75,12 +73,9 @@ public class EventServiceAdmin {
         }
     }
 
-    public List<EventRespShort> get(List<Long> users, List<String> states, List<Long> categories,
+    public List<EventRespShort> get(List<Long> users, List<String> states, List<Integer> categories,
                                    LocalDateTime start, LocalDateTime end, int from, int size) {
         try {
-            int startPage = from > 0 ? (from / size) : 0;
-            System.out.println(startPage);
-            Pageable pageable = PageRequest.of(startPage, size);
             if (users == null) {
                 users = List.of();
             } else if (states == null) {
@@ -98,12 +93,12 @@ public class EventServiceAdmin {
             List<EventRespShort> eventRespFulls;
                 if (start != null && end != null) {
                     eventRespFulls = eventRepository
-                            .findByConditionals(states, categories, users, start, end, pageable)
+                            .findByConditionals(states, categories, users, start, end, size)
                             .stream()
                             .map(event -> EventMapper.toRespShort(event))
                             .toList();
                 } else {
-                    eventRespFulls = eventRepository.findAll(pageable).stream()
+                    eventRespFulls = eventRepository.findAll(categories, size).stream()
                             .map((event -> EventMapper.toRespShort(event))).toList();
                 }
             System.out.println(eventRespFulls);

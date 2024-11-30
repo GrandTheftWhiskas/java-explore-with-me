@@ -1,9 +1,10 @@
 package ru.practicum.compilation.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.compilation.model.Compilation;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
@@ -11,7 +12,9 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
 
     Compilation findCompilationById(Long id);
 
-    Page<Compilation> findAll(Pageable pageable);
+    @Query(value = "SELECT * FROM compilations " +
+    "LIMIT ?1 ", nativeQuery = true)
+    List<Compilation> findAll(int size);
 
     void deleteById(Long id);
 }

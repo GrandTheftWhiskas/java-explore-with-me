@@ -1,6 +1,5 @@
 package ru.practicum.event.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
         List<Event> findByIdIn(List<Long> id);
 
-        List<Event> findByInitId(long userId, Pageable pageable);
+        @Query(value = "SELECT * FROM events AS e " +
+        "WHERE e.init = ?1 " +
+        "LIMIT ?2 ", nativeQuery = true)
+        List<Event> findByInitId(long userId, int size);
 
         List<Event> findByInitIdAndState(long userId, String state, Pageable pageable);
 
@@ -28,14 +30,16 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 "WHERE ((e.state IN (?1) OR ?1 IS NULL) " +
                 "AND (e.category IN (?2) OR ?2 IS NULL) " +
                 "AND (e.init IN (?3) OR ?3 IS NULL) " +
-                "AND (e.event_date BETWEEN ?4 AND ?5)) ", nativeQuery = true)
-        Page<Event> findByConditionals(List<String> state, List<Long> category, List<Long> initiator,
-                                       LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
+                "AND (e.event_date BETWEEN ?4 AND ?5)) " +
+                "LIMIT ?6 ", nativeQuery = true)
+        List<Event> findByConditionals(List<String> state, List<Integer> category, List<Long> initiator,
+                                       LocalDateTime rangeStart, LocalDateTime rangeEnd, int size);
 
         @Query(value = "SELECT e.* " +
                 "FROM events AS e " +
-                "WHERE e.category IN (?1) ", nativeQuery = true)
-        Page<Event> findAll(List<Integer> categories, Pageable pageable);
+                "WHERE e.category IN (?1) " +
+                "LIMIT ?2 ", nativeQuery = true)
+        List<Event> findAll(List<Integer> categories, int size);
 
         @Query(value = "SELECT * " +
                 "FROM events AS e " +
@@ -48,8 +52,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 "  select count(id) " +
                 "  from requests AS r " +
                 "  WHERE r.event = e.id) < limited) " +
-                "AND state = 'PUBLISHED') ", nativeQuery = true)
+                "AND state = 'PUBLISHED')" +
+                "LIMIT ?7 ", nativeQuery = true)
         List<Event> searchEvents(String text, List<Integer> category, Boolean paid, LocalDateTime rangStart,
-                                 LocalDateTime rangeEnd, boolean isAvailable, Pageable pageable);
+                                 LocalDateTime rangeEnd, boolean isAvailable, int size);
 }
 
