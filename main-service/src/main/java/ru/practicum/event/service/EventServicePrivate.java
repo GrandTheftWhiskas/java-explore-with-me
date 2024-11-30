@@ -118,9 +118,7 @@ public class EventServicePrivate {
         }
     }
 
-    public List<RequestDto> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
-        try {
-
+    public Map<String, List<RequestDto>> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
             Event event = eventRepository.getEventById(eventId);
             List<Request> requests = requestRepository.findByIdInAndEventId(requestFor.getRequestIds(), eventId);
             Long participants;
@@ -139,32 +137,34 @@ public class EventServicePrivate {
                 System.out.println(request1.getStatus());
                 requestRepository.save(request1);
             }
-
-                return requests.stream().map(request -> RequestMapper.toRequestDto(request)).toList();
-        } catch (NullPointerException e) {
-            throw new NotFoundException("Сущность не найдена");
-        }
+                if (requestFor.getStatus().equals("REJECTED")) {
+                    return Map.of("rejectedRequests",
+                            requests.stream().map(request -> RequestMapper.toRequestDto(request)).toList());
+                } else {
+                    return Map.of("confirmedRequests",
+                            requests.stream().map(request -> RequestMapper.toRequestDto(request)).toList());
+                }
     }
 
     public EventDto update(EventUpdate eventUpdate, Long userId, Long eventId) {
-            Event event = eventRepository.getEventById(eventId);
-            if (eventUpdate.getParticipantLimit() < 0) {
-                throw new BadRequestException("Попытка изменить лимит на отрицательный");
-            } else if (!(event.getState().equals("PENDING")) && !(event.getState().equals("CANCELED"))) {
-                throw new ValidationException("Неверно указан статус");
-            } else if (eventUpdate.getEventDate() != null) {
-                if (eventUpdate.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-                    throw new BadRequestException("Дата не может быть раньше 2 часов");
-                }
+        Event event = eventRepository.getEventById(eventId);
+        if (eventUpdate.getParticipantLimit() < 0) {
+            throw new BadRequestException("Попытка изменить лимит на отрицательный");
+        } else if (!(event.getState().equals("PENDING")) && !(event.getState().equals("CANCELED"))) {
+            throw new ValidationException("Неверно указан статус");
+        } else if (eventUpdate.getEventDate() != null) {
+            if (eventUpdate.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new BadRequestException("Дата не может быть раньше 2 часов");
             }
+        }
 
-            Category category = event.getCategory();
-            if (eventUpdate.getCategory() != null) {
-                category = categoryRepository.findCategoryById(eventUpdate.getCategory());
-            }
+        Category category = event.getCategory();
+        if (eventUpdate.getCategory() != null) {
+            category = categoryRepository.findCategoryById(eventUpdate.getCategory());
+        }
 
-            Event result = Update.updateEvent(event, eventUpdate, category);
-            return EventMapper.toEventDto(result);
+        Event result = Update.updateEvent(event, eventUpdate, category);
+        return EventMapper.toEventDto(result);
     }
 
     public List<RequestDto> get(Long userId, Long eventId) {

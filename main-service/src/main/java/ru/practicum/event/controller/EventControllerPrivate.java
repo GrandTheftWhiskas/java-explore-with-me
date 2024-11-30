@@ -15,6 +15,7 @@ import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestForConfirmation;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users/{userId}/events")
@@ -60,8 +61,8 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}/requests")
-    public List<RequestDto> approve(@RequestBody RequestForConfirmation request,
-                                   @PathVariable Long userId, @PathVariable Long eventId) {
+    public Map<String, List<RequestDto>> approve(@RequestBody RequestForConfirmation request,
+                                                 @PathVariable Long userId, @PathVariable Long eventId) {
         log.info("Обновление запроса по событию");
         return service.approve(request, userId, eventId);
     }
