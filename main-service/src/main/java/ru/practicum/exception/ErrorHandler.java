@@ -13,7 +13,6 @@ import java.sql.SQLException;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
