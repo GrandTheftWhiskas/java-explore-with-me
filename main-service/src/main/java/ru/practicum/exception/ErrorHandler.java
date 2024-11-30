@@ -11,21 +11,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 
 @Slf4j
-    @RestControllerAdvice
-    public class ErrorHandler {
-        @ExceptionHandler
-        @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-        public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
-            log.error("Ошибка при вводе значений: {}", e.getMessage());
-            return new ErrorResponse(e.getMessage());
-        }
+@RestControllerAdvice
+public class ErrorHandler {
+    
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("Ошибка при вводе значений: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
-        @ExceptionHandler
-        @ResponseStatus(HttpStatus.NOT_FOUND)
-        public ErrorResponse handleNotFound(NotFoundException e) {
-            log.error("Ошибка: {}", e.getMessage());
-            return new ErrorResponse(e.getMessage());
-        }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFound(NotFoundException e) {
+        log.error("Ошибка: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -34,12 +35,12 @@ import java.sql.SQLException;
         return new ErrorResponse(e.getMessage());
     }
 
-        @ExceptionHandler
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ErrorResponse handleMethodBadRequest(MethodArgumentNotValidException e) {
-            log.error("Некорректные данные от пользователя: {}", e.getMessage());
-            return new ErrorResponse(e.getMessage());
-        }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodBadRequest(MethodArgumentNotValidException e) {
+        log.error("Некорректные данные от пользователя: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -48,12 +49,12 @@ import java.sql.SQLException;
         return new ErrorResponse(e.getMessage());
     }
 
-        @ExceptionHandler
-        @ResponseStatus(HttpStatus.CONFLICT)
-        public ErrorResponse handleConflict(SQLException e) {
-            log.error("Произошла конфликт: {}", e.getMessage());
-            return new ErrorResponse(e.getMessage());
-        }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflict(SQLException e) {
+        log.error("Произошла конфликт: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)

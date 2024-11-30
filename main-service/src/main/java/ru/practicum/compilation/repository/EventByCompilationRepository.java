@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.compilation.dto.EventByCompId;
 import ru.practicum.compilation.model.CompositeKeyForEventByComp;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface EventByCompilationRepository extends JpaRepository<CompositeKeyForEventByComp, Long> {
