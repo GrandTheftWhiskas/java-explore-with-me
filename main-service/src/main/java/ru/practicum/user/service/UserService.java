@@ -23,12 +23,12 @@ public class UserService {
 
     public List<UserDto> get(List<Integer> ids, int from, int size) {
         if (ids == null) {
-            return userRepository.findAll(size).stream()
+            return userRepository.findAll(size - from).stream()
                     .map(user -> UserMapper.toUserDto(user)).toList();
         }
 
         ids = ids.stream().sorted().toList();
-        return userRepository.findByIdIn(ids, size).stream()
+        return userRepository.findByIdIn(ids, size - from).stream()
                 .map(user -> UserMapper.toUserDto(user)).toList();
     }
 

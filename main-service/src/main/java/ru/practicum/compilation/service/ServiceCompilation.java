@@ -1,8 +1,6 @@
 package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dto.CompilationDto;
@@ -44,7 +42,6 @@ public class ServiceCompilation {
 
     @Transactional
     public CompilationResponse update(CompilationUpdate dto, Long id) {
-        System.out.println(dto);
         if (compilationRepository.existsById(id)) {
             Compilation compilation = compilationRepository.findCompilationById(id);
             if (dto.getTitle() != null) {
@@ -76,8 +73,7 @@ public class ServiceCompilation {
     }
 
     public List<CompilationResponse> getAll(boolean pinned, int from, int size) {
-        Pageable pageable = PageRequest.of(from / size, size);
-        List<Compilation> compilations = compilationRepository.findAll(pageable).stream().toList();
+        List<Compilation> compilations = compilationRepository.findAll(size - from).stream().toList();
 
         return compilations.stream()
                 .map(compilation -> CompilationMapper.toCompilationResponse(compilation)).toList();
