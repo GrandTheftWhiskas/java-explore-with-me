@@ -60,4 +60,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         List<Event> searchEvents(String text, List<Integer> category, Boolean paid, LocalDateTime rangStart,
                                  LocalDateTime rangeEnd, boolean isAvailable, int from);
 }
-
+//
