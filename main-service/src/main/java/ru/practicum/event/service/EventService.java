@@ -167,8 +167,8 @@ public class EventService {
             List<EventRespShort> events = eventRepository.findByInitId(userId, pageable).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
             List<Long> ids = events.stream().map(eventRespShort -> eventRespShort.getId()).toList();
-            Map<Integer, Integer> requestsConfirm = requestRepository.
-                    countByEventIdInAndStatusGroupByEvent(ids, String.valueOf(RequestStatus.CONFIRMED)).stream()
+            Map<Integer, Integer> requestsConfirm = requestRepository
+                    .countByEventIdInAndStatusGroupByEvent(ids, String.valueOf(RequestStatus.CONFIRMED)).stream()
                     .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
             String uris = ids.stream().map((id) -> "/event/" + id).collect(Collectors.joining());
             ResponseEntity<List<StatsDto>> response =
