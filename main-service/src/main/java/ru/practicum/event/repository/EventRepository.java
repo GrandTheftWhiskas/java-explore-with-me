@@ -41,7 +41,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 "LIMIT ?2", nativeQuery = true)
         List<Event> findAllByCategories(List<Integer> categories, int limit);
 
-        @Query(value = "SELECT * FROM events LIMIT ?1")
+        @Query(value = "SELECT * FROM events LIMIT ?1", nativeQuery = true)
         List<Event> findAll(int limit);
 
         @Query(value = "SELECT * " +
