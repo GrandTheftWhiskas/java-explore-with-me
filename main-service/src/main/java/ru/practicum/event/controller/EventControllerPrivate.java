@@ -2,6 +2,7 @@ package ru.practicum.event.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventDto;
 import ru.practicum.event.dto.EventRespShort;
 import ru.practicum.event.dto.EventUpdate;
-import ru.practicum.event.service.EventServicePrivate;
+import ru.practicum.event.service.EventService;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestForConfirmation;
 
@@ -23,7 +24,7 @@ import java.util.Map;
 @Validated
 @Slf4j
 public class EventControllerPrivate {
-    private final EventServicePrivate service;
+    private final EventService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,8 +35,8 @@ public class EventControllerPrivate {
 
     @GetMapping
     public List<EventRespShort> getUserEvents(@PathVariable Long userId,
-                                              @RequestParam(defaultValue = "0") int from,
-                                              @RequestParam(defaultValue = "10") int size) {
+                                              @Min(0) @RequestParam(defaultValue = "0") int from,
+                                              @Min(1) @RequestParam(defaultValue = "10") int size) {
         log.info("Получение событий пользователя");
         return service.get(userId, from, size);
     }

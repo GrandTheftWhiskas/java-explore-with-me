@@ -1,6 +1,7 @@
 package ru.practicum.event.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.EventDto;
 import ru.practicum.client.StatClient;
 import ru.practicum.event.dto.EventRespShort;
-import ru.practicum.event.service.EventServicePublic;
+import ru.practicum.event.service.EventService;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class EventControllerPublic {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final EventServicePublic service;
+    private final EventService service;
     private final StatClient statClient;
 
     @GetMapping
@@ -34,8 +35,8 @@ public class EventControllerPublic {
                                        @RequestParam(required = false) String rangeEnd,
                                        @RequestParam(required = false, defaultValue = "false") boolean onlyAvailable,
                                        @RequestParam(required = false) String sort,
-                                       @RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "10") int size,
+                                       @Min(0) @RequestParam(defaultValue = "0") int from,
+                                       @Min(1) @RequestParam(defaultValue = "10") int size,
                                        HttpServletRequest servletRequest) {
         log.info("Поиск события");
         String ip = servletRequest.getRemoteAddr();

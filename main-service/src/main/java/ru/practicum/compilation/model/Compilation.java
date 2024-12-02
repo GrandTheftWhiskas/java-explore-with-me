@@ -1,11 +1,13 @@
 package ru.practicum.compilation.model;
 
-
+import ru.practicum.event.model.Event;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "compilations")
@@ -21,4 +23,7 @@ public class Compilation {
     private String title;
     @Column(name = "pinned")
     private Boolean pinned;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "events")
+    private List<Event> events;
 }

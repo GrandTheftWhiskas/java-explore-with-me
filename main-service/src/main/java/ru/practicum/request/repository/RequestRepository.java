@@ -8,11 +8,10 @@ import ru.practicum.request.model.Request;
 import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    Request save(Request request);
 
     Request getRequestById(Long id);
 
-    Long countByEventIdAndStatus(long eventId, String requestState);
+    Long countByEventIdAndStatus(long eventId, String status);
 
     List<Request> findByRequesterId(Long id);
 
@@ -28,7 +27,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "where event IN ?1 " +
             "AND status LIKE ?2 " +
             "group by event ", nativeQuery = true)
-    List<EventIdByRequestsCount> countByEventIdInAndStatusGroupByEvent(List<Long> eventId, String requestState);
+    List<EventIdByRequestsCount> countByEventIdInAndStatusGroupByEvent(List<Long> eventId, String status);
 
     @Query(value = "select id " +
             "from requests " +

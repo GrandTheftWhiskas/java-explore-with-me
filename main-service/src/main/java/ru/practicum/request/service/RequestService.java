@@ -3,12 +3,14 @@ package ru.practicum.request.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.Status;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
+import ru.practicum.request.model.RequestStatus;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.repository.UserRepository;
 
@@ -29,9 +31,9 @@ public class RequestService {
             Request request = new Request();
             request.setRequester(userRepository.getUserById(userId));
             request.setEvent(event);
-            request.setStatus("PENDING");
+            request.setStatus(String.valueOf(RequestStatus.PENDING));
             if (!event.getModeration() || event.getLimit() == 0) {
-                request.setStatus("CONFIRMED");
+                request.setStatus(String.valueOf(RequestStatus.CONFIRMED));
             }
 
             List<Request> requests = requestRepository.findByEventId(eventId);
@@ -42,7 +44,7 @@ public class RequestService {
                 throw new ConflictException("Данный пользователь ранее уже подавал заявку");
             } else if (event.getInit().getId().equals(userId)) {
                 throw new ConflictException("Инициатор события не может подать заявку на участие в нем");
-            } else if (!event.getState().equals("PUBLISHED")) {
+            } else if (!event.getState().equals(String.valueOf(Status.PUBLISHED))) {
                 throw new ConflictException("Событие не опубликовано");
             } else if (event.getLimit() != 0) {
                 if (size >= event.getLimit()) {
@@ -66,7 +68,7 @@ public class RequestService {
         try {
             userRepository.getUserById(userId);
             Request request = requestRepository.getRequestById(requestId);
-            request.setStatus("CANCELED");
+            request.setStatus(String.valueOf(RequestStatus.CANCELED));
             return RequestMapper.toRequestDto(requestRepository.save(request));
         } catch (NullPointerException e) {
             throw new NotFoundException("Сущность не найдена");

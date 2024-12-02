@@ -1,6 +1,7 @@
 package ru.practicum.user.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> get(@RequestParam(required = false) List<Integer> ids,
-                             @RequestParam(defaultValue = "0") int from,
-                             @RequestParam(defaultValue = "10") int size) {
+                             @Min(0) @RequestParam(defaultValue = "0") int from,
+                             @Min(1) @RequestParam(defaultValue = "10") int size) {
         log.info("Получение пользователей");
         return userService.get(ids, from, size);
     }

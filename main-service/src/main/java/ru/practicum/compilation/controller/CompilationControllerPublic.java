@@ -1,11 +1,12 @@
 package ru.practicum.compilation.controller;
 
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.CompilationResponse;
-import ru.practicum.compilation.service.ServiceCompilationPublic;
+import ru.practicum.compilation.service.ServiceCompilation;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ import java.util.List;
 @Validated
 @Slf4j
 public class CompilationControllerPublic {
-    private final ServiceCompilationPublic service;
+    private final ServiceCompilation service;
 
     @GetMapping
     public List<CompilationResponse> get(@RequestParam(required = false) boolean pinned,
-                                            @RequestParam(required = false, defaultValue = "0") int from,
-                                            @RequestParam(required = false, defaultValue = "10") int size) {
+                                           @Min(0) @RequestParam(required = false, defaultValue = "0") int from,
+                                           @Min(1) @RequestParam(required = false, defaultValue = "10") int size) {
         log.info("Получение подборок");
         return service.getAll(pinned, from, size);
     }

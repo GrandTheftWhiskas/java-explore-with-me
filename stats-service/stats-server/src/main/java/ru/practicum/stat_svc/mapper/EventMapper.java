@@ -9,6 +9,6 @@ public class EventMapper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static EventDto toEventDto(Event event) {
-        return new EventDto(event.getApp(), event.getUri(), event.getIp(), event.getTimestamp().format(formatter));
+        return new EventDto(event.getApp(), event.getUri(), event.getIp(), event.getPeriod().format(formatter));
     }
 }

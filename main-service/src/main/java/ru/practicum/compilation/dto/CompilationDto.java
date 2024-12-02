@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CompilationDto {
     private Long id;
-    @NotBlank
     @Length(max = 50)
+    @NotBlank
     private String title;
     private Boolean pinned;
     private List<Long> events;

@@ -28,7 +28,7 @@ public class StatService {
             event.setApp(eventDto.getApp());
             event.setUri(eventDto.getUri());
             event.setIp(eventDto.getIp());
-            event.setTimestamp(LocalDateTime.parse(eventDto.getTimestamp(), formatter));
+            event.setPeriod(LocalDateTime.parse(eventDto.getTimestamp(), formatter));
             return EventMapper.toEventDto(statRepository.save(event));
         } catch (NullPointerException e) {
             throw new NotFoundException("Значения не должны равняться null");

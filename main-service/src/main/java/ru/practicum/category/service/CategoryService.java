@@ -1,13 +1,14 @@
 package ru.practicum.category.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
 
@@ -15,25 +16,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public CategoryDto add(CategoryDto categoryDto) {
-        Category category = new Category(categoryDto.getId(), categoryDto.getName());
+        Category category = new Category();
+        category.setName(categoryDto.getName());
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
-
+    @Transactional
     public CategoryDto update(CategoryDto categoryDto, Long catId) {
-        List<Category> categories = categoryRepository.findAll().stream()
-                .filter(category1 -> category1.getName().equals(categoryDto.getName())).toList();
-        if (!categories.isEmpty()) {
-            if (!categories.get(0).getId().equals(catId)) {
-                throw new ConflictException("Имя не должно повторяться");
-            }
-        }
-
         Category category = categoryRepository.findCategoryById(catId);
         category.setName(categoryDto.getName());
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
@@ -53,12 +49,15 @@ public class CategoryService {
             throw new ValidationException("Введены некорректные значения");
         }
 
-        return categoryRepository.findAll(size).stream()
+        Pageable pageable = PageRequest.of(from / size, size);
+        return categoryRepository.findAll(pageable).stream()
                 .map(category -> CategoryMapper.toCategoryDto(category)).toList();
     }
 
     @Transactional
     public void delete(Long catId) {
-        categoryRepository.deleteCategoryById(catId);
+        if (categoryRepository.existsById(catId)) {
+            categoryRepository.deleteById(catId);
+        }
     }
 }
