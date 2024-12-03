@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+
         Event getEventById(Long id);
 
         List<Event> findByIdIn(List<Long> id);
