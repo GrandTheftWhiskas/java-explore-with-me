@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User save(User user);
+    
     User getUserById(Long id);
 
     @Query(value = "SELECT * FROM users AS u " +
