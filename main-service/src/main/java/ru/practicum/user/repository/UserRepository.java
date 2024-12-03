@@ -15,10 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     "WHERE u.id IN (?1) ", nativeQuery = true)
     Page<User> findByIdIn(List<Integer> ids, Pageable pageable);
 
-    @Query("SELECT u FROM User AS u ")
-    List<User> getAllUser();
-
-
     void deleteById(Long id);
 
 }

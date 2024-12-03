@@ -17,9 +17,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findByEventId(Long eventId);
 
-    @Query(value = "select * " +
-          "FROM requests " +
-    "WHERE event IN ?1", nativeQuery = true)
     List<Request> findByEventIdIn(List<Long> ids);
 
     @Query(value = "select count(id), event " +

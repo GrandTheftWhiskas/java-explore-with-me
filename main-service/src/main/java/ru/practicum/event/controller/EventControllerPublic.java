@@ -26,6 +26,7 @@ public class EventControllerPublic {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventService service;
     private final StatClient statClient;
+    private static final String app = "ewm-main-service";
 
     @GetMapping
     public List<EventRespShort> search(@RequestParam(required = false) String text,
@@ -41,7 +42,7 @@ public class EventControllerPublic {
         log.info("Поиск события");
         String ip = servletRequest.getRemoteAddr();
         String path = servletRequest.getRequestURI();
-        EventDto eventDto = new EventDto("ewm-main-service", path, ip, LocalDateTime.now().format(formatter));
+        EventDto eventDto = new EventDto(app, path, ip, LocalDateTime.now().format(formatter));
         statClient.addStat(eventDto);
         if (rangeStart == null && rangeEnd == null) {
             return service.search(text, categories, paid, null, null, onlyAvailable, sort, from, size);

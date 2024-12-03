@@ -35,10 +35,6 @@ public class UserService {
                 .map(user -> UserMapper.toUserDto(user)).toList();
     }
 
-    public List<UserDto> getAll() {
-        return userRepository.getAllUser().stream().map(user -> UserMapper.toUserDto(user)).toList();
-    }
-
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
