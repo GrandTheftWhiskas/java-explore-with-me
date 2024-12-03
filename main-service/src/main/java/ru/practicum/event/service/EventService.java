@@ -1,6 +1,8 @@
 package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatsDto;
@@ -91,20 +93,21 @@ public class EventService {
         }
 
         List<EventRespShort> events;
+        Pageable pageable = PageRequest.of(from / size, size);
         if (start != null && end != null) {
             if (start.isAfter(end)) {
                 throw new ValidationException("Указана неверная дата");
             }
             events = eventRepository
-                    .findByConditionals(states, categories, users, start, end, size - from)
+                    .findByConditionals(states, categories, users, start, end, pageable)
                     .stream()
                     .map(event -> EventMapper.toRespShort(event))
                     .toList();
         } else if (categories != null) {
-            events = eventRepository.findAllByCategories(categories, size - from).stream()
+            events = eventRepository.findAllByCategories(categories, pageable).stream()
                     .map((event -> EventMapper.toRespShort(event))).toList();
         } else {
-            events = eventRepository.findAll(size - from).stream()
+            events = eventRepository.findAll(pageable).stream()
                     .map((event -> EventMapper.toRespShort(event))).toList();
         }
         List<Long> eventsIds = events
@@ -157,7 +160,8 @@ public class EventService {
 
     public List<EventRespShort> get(Long userId, int from, int size) {
         try {
-            List<EventRespShort> events = eventRepository.findByInitId(userId, size - from).stream()
+            Pageable pageable = PageRequest.of(from / size, size);
+            List<EventRespShort> events = eventRepository.findByInitId(userId, pageable).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
             List<Long> ids = events.stream().map(eventRespShort -> eventRespShort.getId()).toList();
             Map<Integer, Integer> requestsConfirm = requestRepository
@@ -288,12 +292,13 @@ public class EventService {
         }
 
         List<EventRespShort> events;
+        Pageable pageable = PageRequest.of(from / size, size);
         if (start != null && end != null) {
             events = eventRepository.searchEvents(text, categories, paid,
-                            start, end, available, size - from).stream()
+                            start, end, available, pageable).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
         } else {
-            events = eventRepository.findAllByCategories(categories, size - from).stream()
+            events = eventRepository.findAllByCategories(categories, pageable).stream()
                     .map(event -> EventMapper.toRespShort(event)).toList();
         }
         List<Long> ids = events.stream().map(eventRespShort -> eventRespShort.getId()).toList();

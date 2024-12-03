@@ -1,6 +1,8 @@
 package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dto.CompilationDto;
@@ -73,7 +75,8 @@ public class ServiceCompilation {
     }
 
     public List<CompilationResponse> getAll(boolean pinned, int from, int size) {
-        List<Compilation> compilations = compilationRepository.findAll(size - from).stream().toList();
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Compilation> compilations = compilationRepository.findAll(pageable).stream().toList();
 
         return compilations.stream()
                 .map(compilation -> CompilationMapper.toCompilationResponse(compilation)).toList();

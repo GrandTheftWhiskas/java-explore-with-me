@@ -1,6 +1,8 @@
 package ru.practicum.category.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.dto.CategoryDto;
@@ -47,7 +49,8 @@ public class CategoryService {
             throw new ValidationException("Введены некорректные значения");
         }
 
-        return categoryRepository.findAll(size - from).stream()
+        Pageable pageable = PageRequest.of(from / size, size);
+        return categoryRepository.findAll(pageable).stream()
                 .map(category -> CategoryMapper.toCategoryDto(category)).toList();
     }
 
