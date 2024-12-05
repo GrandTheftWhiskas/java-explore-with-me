@@ -64,7 +64,8 @@ public class CommentService {
             throw new NotFoundException("Комментарий не найден");
         }
     }
-    
+
+
     public User userValidation(Long userId) {
         if (userRepository.existsById(userId)) {
             return userRepository.getUserById(userId);
