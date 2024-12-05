@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/comments/")
+@RequestMapping("/admin/comments")
 @Slf4j
 public class CommentControllerAdmin {
     private final CommentService service;
@@ -23,7 +23,7 @@ public class CommentControllerAdmin {
     }
 
     @GetMapping
-    public List<CommentDto> getAll(@RequestParam Long authorId) {
+    public List<CommentDto> getAll(@RequestParam(required = false) Long authorId) {
         log.info("Получение всех комментариев пользователя");
         return service.getAll(authorId);
     }
