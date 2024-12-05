@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS events (
   app VARCHAR(255),
   uri VARCHAR(255),
   ip VARCHAR(255),
-  period TIMESTAMP WITHOUT TIME ZONE
+  period TIMESTAMP
 );
 
 

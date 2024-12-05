@@ -1,21 +1,23 @@
 package ru.practicum.client;
 
+import jakarta.annotation.Nullable;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.EventDto;
+import ru.practicum.StatsDto;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StatClient extends BaseClient {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public StatClient(RestTemplateBuilder builder, String serverUrl) {
         super(builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
@@ -23,35 +25,36 @@ public class StatClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> post(EventDto eventDto) {
-        return post("/hit", eventDto);
-    }
+    public ResponseEntity<List<StatsDto>> getStat(LocalDateTime start, LocalDateTime end,
+                                                  @Nullable String uris, boolean unique) {
+        String encodedStartDate = encodeParameter(convertLocalDateTimeToString(start));
+        String encodedEndDate = encodeParameter(convertLocalDateTimeToString(end));
 
-    public ResponseEntity<Object> get(Long eventId) {
-        return get("/stats/" + eventId);
-    }
-
-    public ResponseEntity<Object> getStat(LocalDateTime start, LocalDateTime end,
-                                          List<String> uris, boolean unique) {
-        Map<String, Object> components;
+        Map<String, Object> parameters = new HashMap<>(
+                Map.of(
+                        "start", encodedStartDate,
+                        "end", encodedEndDate,
+                        "unique", unique
+                )
+        );
         if (uris != null) {
-             components = Map.of(
-                    "start", URLEncoder.encode(formatter.format(start), StandardCharsets.UTF_8),
-                    "end", URLEncoder.encode(formatter.format(end), StandardCharsets.UTF_8),
-                    "uris", uris,
-                    "unique", unique
-            );
-        } else {
-             components = Map.of(
-                    "start", URLEncoder.encode(formatter.format(start), StandardCharsets.UTF_8),
-                    "end", URLEncoder.encode(formatter.format(end), StandardCharsets.UTF_8),
-                    "unique", unique
-            );
+            parameters.put("uris", uris);
         }
-
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, components);
+        return getList("/stats" + "?start={start}&end={end}&uris={uris}&unique={unique}", parameters,
+                new ParameterizedTypeReference<>() {
+                });
     }
 
+    public ResponseEntity<Object> addStat(EventDto dto) {
+        System.out.println("клиент");
+        return post("/hit", dto, null);
+    }
 
+    private String encodeParameter(String parameter) {
+        return URLEncoder.encode(parameter, StandardCharsets.UTF_8);
+    }
 
+    private String convertLocalDateTimeToString(LocalDateTime time) {
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 }

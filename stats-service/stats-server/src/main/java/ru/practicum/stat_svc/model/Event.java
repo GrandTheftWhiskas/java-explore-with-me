@@ -1,5 +1,6 @@
 package ru.practicum.stat_svc.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class Event {
     @Column(name = "ip")
     private String ip;
     @Column(name = "period")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime period;
 
 }

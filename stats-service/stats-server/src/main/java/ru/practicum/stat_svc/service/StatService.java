@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.EventDto;
 import ru.practicum.StatsDto;
-import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.*;
 import ru.practicum.stat_svc.mapper.EventMapper;
 import ru.practicum.stat_svc.model.Event;
 import ru.practicum.stat_svc.repository.StatRepository;
@@ -28,7 +28,7 @@ public class StatService {
             event.setApp(eventDto.getApp());
             event.setUri(eventDto.getUri());
             event.setIp(eventDto.getIp());
-            event.setPeriod(LocalDateTime.now());
+            event.setPeriod(LocalDateTime.parse(eventDto.getTimestamp(), formatter));
             return EventMapper.toEventDto(statRepository.save(event));
         } catch (NullPointerException e) {
             throw new NotFoundException("Значения не должны равняться null");
@@ -40,10 +40,17 @@ public class StatService {
     }
 
     public List<StatsDto> getAll(String start, String end, List<String> uris, Boolean unique) {
+        if (start == null || end == null) {
+            throw new BadRequestException("Не указана одна из дат");
+        }
+
         LocalDateTime convertStart =
                 LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
         LocalDateTime convertEnd =
                 LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
+        if (convertStart.isAfter(convertEnd)) {
+            throw new BadRequestException("Старт не может быть после конца");
+        }
 
         if (unique) {
             if (uris == null || uris.isEmpty()) {
@@ -51,6 +58,7 @@ public class StatService {
             }
             return statRepository.getAllUniqueWithUris(convertStart, convertEnd, uris);
         }
+
         if (uris == null || uris.isEmpty()) {
             return statRepository.getAll(convertStart, convertEnd);
         }
