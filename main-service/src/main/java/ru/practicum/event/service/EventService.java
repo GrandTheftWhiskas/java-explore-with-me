@@ -5,8 +5,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsDto;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.dto.CommentDto;
+import ru.practicum.comment.mapper.CommentMapper;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.event.dto.EventDto;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.client.StatClient;
@@ -38,18 +42,21 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class EventService {
+@Transactional(readOnly = true)
+public class EventService implements EventServiceInterface {
     private int defaultValue = 0;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final CommentRepository commentRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final StatClient statClient;
 
     //AdminService
+    @Transactional
     public EventRespShort update(EventUpdate eventUpdate, Long id) {
         try {
             Event event = eventRepository.getEventById(id);
@@ -76,6 +83,7 @@ public class EventService {
             Long requests = requestRepository.countByEventIdAndStatus(id, String.valueOf(RequestStatus.CONFIRMED));
             EventRespShort result = EventMapper.toRespShort(newEvent);
             result.setConfirmedRequests(requests);
+            result.setComments(giveComments(result.getId()));
             return result;
         } catch (NullPointerException e) {
             throw new NotFoundException("Объект не найден");
@@ -130,16 +138,17 @@ public class EventService {
             } else {
                 events.get(i).setViews(0L);
             }
-            System.out.println(requestsConfirm);
             events.get(i)
                     .setConfirmedRequests(requestsConfirm
                             .getOrDefault(events.get(i).getId(), defaultValue));
+            events.get(i).setComments(giveComments(events.get(i).getId()));
             defaultValue++;
         }
         return events;
     }
 
     //PrivateService
+    @Transactional
     public EventDto add(EventDto dto, Long userId) {
         if (dto.getRequestModeration() == null) {
             dto.setRequestModeration(true);
@@ -155,7 +164,9 @@ public class EventService {
         event.setCategory(categoryRepository.findCategoryById(dto.getCategory()));
         event.setCreated(LocalDateTime.now());
         event.setState(String.valueOf(Status.PENDING));
-        return EventMapper.toEventDto(eventRepository.save(event));
+        EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
+        eventDto.setComments(giveComments(eventDto.getId()));
+        return eventDto;
     }
 
     public List<EventRespShort> get(Long userId, int from, int size) {
@@ -182,6 +193,7 @@ public class EventService {
                 events.get(i)
                         .setConfirmedRequests(requestsConfirm
                                 .getOrDefault(events.get(i).getId(), 0));
+                events.get(i).setComments(giveComments(events.get(i).getId()));
             }
 
             return events;
@@ -207,12 +219,14 @@ public class EventService {
                 return eventRespShort;
             }
             eventRespShort.setViews(views.getFirst());
+            eventRespShort.setComments(giveComments(eventRespShort.getId()));
             return eventRespShort;
         } catch (NullPointerException e) {
             throw new NotFoundException("Сущность не найдена");
         }
     }
 
+    @Transactional
     public Map<String, List<RequestDto>> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
         Event event = eventRepository.getEventById(eventId);
         List<Request> requests = requestRepository.findByIdInAndEventId(requestFor.getRequestIds(), eventId);
@@ -240,6 +254,7 @@ public class EventService {
         }
     }
 
+    @Transactional
     public EventDto update(EventUpdate eventUpdate, Long userId, Long eventId) {
         Event event = eventRepository.getEventById(eventId);
         if (eventUpdate.getParticipantLimit() < 0) {
@@ -259,7 +274,9 @@ public class EventService {
         }
 
         Event result = updateEvent(event, eventUpdate, category);
-        return EventMapper.toEventDto(result);
+        EventDto eventDto = EventMapper.toEventDto(result);
+        eventDto.setComments(giveComments(eventDto.getId()));
+        return eventDto;
     }
 
     public List<RequestDto> get(Long userId, Long eventId) {
@@ -320,7 +337,7 @@ public class EventService {
             events.get(i)
                     .setConfirmedRequests(confirmedRequests
                             .getOrDefault(events.get(i).getId(), 0));
-
+            events.get(i).setComments(giveComments(events.get(i).getId()));
         }
 
         return events;
@@ -343,10 +360,17 @@ public class EventService {
             } else {
                 full.setViews(views.get(0));
             }
+
+            full.setComments(giveComments(full.getId()));
             return full;
         } catch (NullPointerException e) {
             throw new NotFoundException("Сущность не найдена");
         }
+    }
+
+    private List<CommentDto> giveComments(Long eventId) {
+        return commentRepository.findAllByEventId(eventId).stream()
+                .map(comment -> CommentMapper.toCommentDto(comment)).toList();
     }
 
     public static Event updateEvent(Event event, EventUpdate eventUpdated, Category category) {

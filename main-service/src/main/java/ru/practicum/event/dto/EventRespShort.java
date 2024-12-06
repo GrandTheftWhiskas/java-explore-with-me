@@ -8,10 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.event.model.Location;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @SuperBuilder
@@ -62,4 +64,6 @@ public class EventRespShort {
     private Boolean requestModeration;
 
     private String state;
+
+    private List<CommentDto> comments;
 }

@@ -2,6 +2,7 @@ package ru.practicum.request.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.Status;
 import ru.practicum.event.repository.EventRepository;
@@ -20,11 +21,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RequestService {
+@Transactional(readOnly = true)
+public class RequestService implements RequestServiceInterface {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
+    @Transactional
     public RequestDto add(Long userId, Long eventId) {
         try {
             Event event = eventRepository.getEventById(eventId);
@@ -64,6 +67,7 @@ public class RequestService {
                 .map(request -> RequestMapper.toRequestDto(request)).toList();
     }
 
+    @Transactional
     public RequestDto cancel(Long userId, Long requestId) {
         try {
             userRepository.getUserById(userId);

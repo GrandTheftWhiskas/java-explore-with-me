@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.event.model.Location;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class EventDto {
@@ -48,5 +50,7 @@ public class EventDto {
     private LocalDateTime createdOn;
 
     private String state;
+
+    private List<CommentDto> comments;
 
 }

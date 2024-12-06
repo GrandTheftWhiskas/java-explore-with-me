@@ -20,7 +20,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceCompilation {
+@Transactional(readOnly = true)
+public class ServiceCompilation implements ServiceCompilationInterface {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
 
