@@ -20,8 +20,8 @@ public class CompilationControllerPublic {
 
     @GetMapping
     public List<CompilationResponse> get(@RequestParam(required = false) boolean pinned,
-                                           @Min(0) @RequestParam(required = false, defaultValue = "0") int from,
-                                           @Min(1) @RequestParam(required = false, defaultValue = "10") int size) {
+                                           @Min(0) @RequestParam(defaultValue = "0") int from,
+                                           @Min(1) @RequestParam(defaultValue = "10") int size) {
         log.info("Получение подборок");
         return service.getAll(pinned, from, size);
     }

@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CategoryService {
+public class CategoryService implements CategoryServiceInterface {
 
     private final CategoryRepository categoryRepository;
 

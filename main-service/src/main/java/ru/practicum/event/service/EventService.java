@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.comment.dto.CommentDto;
@@ -41,7 +42,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class EventService {
+@Transactional(readOnly = true)
+public class EventService implements EventServiceInterface {
     private int defaultValue = 0;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
@@ -54,6 +56,7 @@ public class EventService {
     private final StatClient statClient;
 
     //AdminService
+    @Transactional
     public EventRespShort update(EventUpdate eventUpdate, Long id) {
         try {
             Event event = eventRepository.getEventById(id);
@@ -145,6 +148,7 @@ public class EventService {
     }
 
     //PrivateService
+    @Transactional
     public EventDto add(EventDto dto, Long userId) {
         if (dto.getRequestModeration() == null) {
             dto.setRequestModeration(true);
@@ -222,6 +226,7 @@ public class EventService {
         }
     }
 
+    @Transactional
     public Map<String, List<RequestDto>> approve(RequestForConfirmation requestFor, Long userId, Long eventId) {
         Event event = eventRepository.getEventById(eventId);
         List<Request> requests = requestRepository.findByIdInAndEventId(requestFor.getRequestIds(), eventId);
@@ -249,6 +254,7 @@ public class EventService {
         }
     }
 
+    @Transactional
     public EventDto update(EventUpdate eventUpdate, Long userId, Long eventId) {
         Event event = eventRepository.getEventById(eventId);
         if (eventUpdate.getParticipantLimit() < 0) {
